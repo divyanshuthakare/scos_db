@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-app.use("/", routes);
+app.use("/auth", routes);
 
 // ✅ error handler before listen
 app.use(errorHandler);
