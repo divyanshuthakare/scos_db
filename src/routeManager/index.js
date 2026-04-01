@@ -1,10 +1,10 @@
 import express from "express";
-import tenantRoutes from "../routes/tenant.routes.js";
-import userRoutes from "../routes/user.routes.js";
-import instituteRoutes from "../routes/institute.routes.js";
-import roleRoutes from "../routes/role.routes.js";
-import uirRoutes from "../routes/uir.routes.js";
-import authRoutes from "../routes/auth.routes.js";
+import tenantRoutes from "../modules/tenants/tenant.routes.js";
+import userRoutes from "../modules/users/user.routes.js";
+import instituteRoutes from "../modules/institute/institute.routes.js";
+import roleRoutes from "../modules/roles/role.routes.js";
+import uirRoutes from "../modules/user_institute_roles/uir.routes.js";
+import authRoutes from "../modules/login/auth.routes.js";
 
 const router = express.Router();
 
