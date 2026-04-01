@@ -5,7 +5,14 @@ import { generateToken } from "../../services/jwt.service.js";
 // 🔹 LOGIN
 export const loginController = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    // 🔥 CLEAN INPUT
+    email = email?.trim().toLowerCase();
+    password = password?.trim();
+
+    console.log("👉 EMAIL:", email);
+    console.log("👉 ENTERED PASSWORD:", password);
 
     if (!email || !password) {
       return res.status(400).json({
@@ -16,26 +23,32 @@ export const loginController = async (req, res, next) => {
     }
 
     const result = await pool.query(
-      `SELECT * FROM users WHERE email = $1`,
+      `SELECT * FROM users WHERE LOWER(email) = LOWER($1)`,
       [email]
     );
 
     const user = result.rows[0];
 
+    console.log("👉 DB USER:", user);
+
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials",
+        message: "User not found",
         error_code: "INVALID_CREDENTIALS"
       });
     }
 
+    console.log("👉 DB HASH:", user.password_hash);
+
     const isMatch = await bcrypt.compare(password, user.password_hash);
+
+    console.log("👉 PASSWORD MATCH:", isMatch);
 
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials",
+        message: "Password mismatch",
         error_code: "INVALID_CREDENTIALS"
       });
     }
@@ -58,6 +71,7 @@ export const loginController = async (req, res, next) => {
     });
 
   } catch (err) {
+    console.error("🔥 LOGIN ERROR:", err);
     next(err);
   }
 };
